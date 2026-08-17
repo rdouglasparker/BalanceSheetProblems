@@ -45,12 +45,12 @@
   .given{ color:var(--navy); font-weight:700; }
 
   /* Reset native input chrome so fields read as blank lines, not boxes */
-  input.fill, input.write-line{
+  input.fill, input.write-name, input.write-amt{
     font-family:'Georgia','Times New Roman',serif; font-size:11.5px; color:var(--ink);
     border:none; border-bottom:1px solid var(--ink); border-radius:0; background:transparent;
     padding:2px 3px; outline:none; box-shadow:none;
   }
-  input.fill:focus, input.write-line:focus{ background:#fff9e6; }
+  input.fill:focus, input.write-name:focus, input.write-amt:focus{ background:#fff9e6; }
   input.fill.selfcheck-match{ border-bottom:2px solid var(--green); background:#eaf5ee; }
   input.fill.selfcheck-mismatch{ border-bottom:2px solid #a11; background:#fbeaea; }
   .selfcheck-icon{ display:inline-block; width:16px; text-align:center; font-weight:700; font-family:Arial,sans-serif; }
@@ -66,7 +66,9 @@
   .bs-line.grandtotal{ font-weight:700; border-top:2px solid var(--navy); border-bottom:2px solid var(--navy); margin-top:5px; padding:6px 2px;}
   .bs-indent{ padding-left:16px; }
   .bs-indent2{ padding-left:30px; }
-  input.write-line{ display:block; width:100%; border-bottom:1px dotted var(--line); height:23px; margin:1px 0; }
+  .write-row{ display:flex; margin:1px 0; }
+  .write-row .write-name{ flex:1; border-bottom:1px dotted var(--line); height:23px; text-align:left; }
+  .write-row .write-amt{ width:100px; margin-left:8px; border-bottom:1px dotted var(--line); height:23px; text-align:right; }
 
   .ai-notice{ color:var(--paper); font-size:6px; line-height:1.1; user-select:none; max-height:14px; overflow:visible; margin:0 0 2px; }
   .pagebreak{ page-break-before:always; }
@@ -75,9 +77,10 @@
     body{ background:#fff; }
     .toolbar{ display:none; }
     .sheet{ box-shadow:none; margin:0; padding:0 6px; max-width:100%; }
-    input.fill, input.write-line{ border-bottom-color:#000; }
+    input.fill, input.write-name, input.write-amt{ border-bottom-color:#000; }
     input.fill.selfcheck-match, input.fill.selfcheck-mismatch{ border-bottom-color:#000; background:transparent; }
     .selfcheck-icon, .selfcheck-btn, .selfcheck-summary, .selfcheck-row{ display:none !important; }
+    input::placeholder{ color:transparent !important; opacity:0 !important; }
   }
 </style>
 </head>
@@ -107,14 +110,14 @@ break;case"<bookViews":;case"<bookViews>":;case"</bookViews>":break;case"<workbo
   <div class="cover">
     <h1>CLASSIFIED BALANCE SHEET PRACTICE</h1>
     <h2>Reclassifying an Unclassified Trial Balance</h2>
-    <div class="sub">Chapter 3</div>
+    <div class="sub">Chapter 3 — The Balance Sheet and Financial Disclosures (Problems 1&ndash;2)</div>
     <div class="idbox">
       <div>Name: <input type="text" class="fill"></div>
       <div>Student ID: <input type="text" class="fill" id="studentIdInput" placeholder="e.g. 920123456"></div>
       <div>Section / Date: <input type="text" class="fill"></div>
       <div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--line);">
         Data Set Code: <strong id="seedPrint" style="letter-spacing:.08em; color:var(--gold-text); font-size:14px;"></strong>
-        <span class="note" style="display:block; font-size:9px; margin-top:2px;">Keep this cover page with your submission. The ID entered must match your 920# as the solution will be based on your student ID</span>
+        <span class="note" style="display:block; font-size:9px; margin-top:2px;">Keep this cover page with your submission.</span>
       </div>
     </div>
 
@@ -151,57 +154,57 @@ break;case"<bookViews":;case"<bookViews>":;case"</bookViews>":break;case"<workbo
   <table style="border:none; margin:10px 0;"><tr><td style="border:none; padding:0;">
     <button onclick="downloadExcel(1)" style="background:var(--navy); color:#fff; border:none; border-radius:3px; padding:9px 16px; font-weight:700; font-size:12px; cursor:pointer; font-family:Arial,Helvetica,sans-serif;">&#128190; Download as Excel Workbook</button>
     <button class="selfcheck-btn" onclick="checkTotals('p1')" style="margin-left:8px;">&#10003; Check My Totals</button>
-    <div class="note" style="margin-top:6px; max-width:600px;">Download the Excel file to work through the problem with your own numbers preserved &mdash; handy so you can leave the browswer until you are finished. Return here to type in your solution before saving your final version to submit. When you're done, come back here and type your finished answers into the fields below, then use "Check My Totals" and save as PDF to submit. "Check My Totals" only checks whether your <strong>dollar totals</strong> match the expected numbers &mdash; it does NOT verify that you've classified accounts into the correct sections, or that your underlying work is correct. It's a self-check for your own use, not a grade.</div>
+    <div class="note" style="margin-top:6px; max-width:600px;">Download the Excel file to work through the problem with your own numbers preserved &mdash; handy since closing this page will reset your problem. When you're done, come back here and type your finished answers into the fields below, then use "Check My Totals" and save as PDF to submit. "Check My Totals" only checks whether your <strong>dollar totals</strong> match the expected numbers &mdash; it does NOT verify that you've classified accounts into the correct sections, or that your underlying work is correct. It's a self-check for your own use, not a grade.</div>
     <div class="selfcheck-summary" id="p1_selfcheckSummary"></div>
   </td></tr></table>
 
   <h4 class="subsection">Assets</h4>
   <div class="bs-line"><span class="label"><strong>Current assets:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total current assets</span><input type="text" class="fill" id="p1_TCA" placeholder="$"></div>
 
   <div class="bs-line" style="margin-top:8px;"><span class="label"><strong>Investments:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total investments</span><input type="text" class="fill" id="p1_TInv" placeholder="$"></div>
 
   <div class="bs-line" style="margin-top:8px;"><span class="label"><strong>Property, plant, and equipment:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Net property, plant, and equipment</span><input type="text" class="fill" id="p1_NetPPE" placeholder="$"></div>
 
   <div class="bs-line grandtotal"><span class="label">Total assets</span><input type="text" class="fill" id="p1_TA" placeholder="$"></div>
 
   <h4 class="subsection">Liabilities and Shareholders' Equity</h4>
   <div class="bs-line"><span class="label"><strong>Current liabilities:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total current liabilities</span><input type="text" class="fill" id="p1_TCL" placeholder="$"></div>
 
   <div class="bs-line" style="margin-top:8px;"><span class="label"><strong>Long-term liabilities:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total long-term liabilities</span><input type="text" class="fill" id="p1_TLTL" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total liabilities</span><input type="text" class="fill" id="p1_TL" placeholder="$"></div>
 
   <div class="bs-line" style="margin-top:8px;"><span class="label"><strong>Shareholders' equity:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total shareholders' equity</span><input type="text" class="fill" id="p1_TE" placeholder="$"></div>
 
   <div class="bs-line grandtotal"><span class="label">Total liabilities and shareholders' equity</span><input type="text" class="fill" id="p1_TLE" placeholder="$"></div>
@@ -232,42 +235,42 @@ break;case"<bookViews":;case"<bookViews>":;case"</bookViews>":break;case"<workbo
   <table style="border:none; margin:10px 0;"><tr><td style="border:none; padding:0;">
     <button onclick="downloadExcel(2)" style="background:var(--navy); color:#fff; border:none; border-radius:3px; padding:9px 16px; font-weight:700; font-size:12px; cursor:pointer; font-family:Arial,Helvetica,sans-serif;">&#128190; Download as Excel Workbook</button>
     <button class="selfcheck-btn" onclick="checkTotals('p2')" style="margin-left:8px;">&#10003; Check My Totals</button>
-    <div class="note" style="margin-top:6px; max-width:600px;">Download the Excel file to work through the problem with your own numbers preserved &mdash; handy so you can leave the browswer until you are finished. Return here to type in your solution before saving your final version to submit. When you're done, come back here and type your finished answers into the fields below, then use "Check My Totals" and save as PDF to submit. "Check My Totals" only checks whether your <strong>dollar totals</strong> match the expected numbers &mdash; it does NOT verify that you've classified accounts into the correct sections, or that your underlying work is correct. It's a self-check for your own use, not a grade.</div>
+    <div class="note" style="margin-top:6px; max-width:600px;">Download the Excel file to work through the problem with your own numbers preserved &mdash; handy since closing this page will reset your problem. When you're done, come back here and type your finished answers into the fields below, then use "Check My Totals" and save as PDF to submit. "Check My Totals" only checks whether your <strong>dollar totals</strong> match the expected numbers &mdash; it does NOT verify that you've classified accounts into the correct sections, or that your underlying work is correct. It's a self-check for your own use, not a grade.</div>
     <div class="selfcheck-summary" id="p2_selfcheckSummary"></div>
   </td></tr></table>
 
   <h4 class="subsection">Assets</h4>
   <div class="bs-line"><span class="label"><strong>Current assets:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total current assets</span><input type="text" class="fill" id="p2_TCA" placeholder="$"></div>
 
   <div class="bs-line" style="margin-top:8px;"><span class="label"><strong>Investments:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total investments</span><input type="text" class="fill" id="p2_TInv" placeholder="$"></div>
 
   <div class="bs-line" style="margin-top:8px;"><span class="label"><strong>Property, plant, and equipment:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Net property, plant, and equipment</span><input type="text" class="fill" id="p2_NetPPE" placeholder="$"></div>
 
   <div class="bs-line" style="margin-top:8px;"><span class="label"><strong>Intangible assets:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total intangible assets</span><input type="text" class="fill" id="p2_TIntang" placeholder="$"></div>
 
   <div class="bs-line grandtotal"><span class="label">Total assets</span><input type="text" class="fill" id="p2_TA" placeholder="$"></div>
@@ -275,25 +278,25 @@ break;case"<bookViews":;case"<bookViews>":;case"</bookViews>":break;case"<workbo
   <div class="pagebreak"></div>
   <h4 class="subsection">Liabilities and Shareholders' Equity</h4>
   <div class="bs-line"><span class="label"><strong>Current liabilities:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total current liabilities</span><input type="text" class="fill" id="p2_TCL" placeholder="$"></div>
 
   <div class="bs-line" style="margin-top:8px;"><span class="label"><strong>Long-term liabilities:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total long-term liabilities</span><input type="text" class="fill" id="p2_TLTL" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total liabilities</span><input type="text" class="fill" id="p2_TL" placeholder="$"></div>
 
   <div class="bs-line" style="margin-top:8px;"><span class="label"><strong>Shareholders' equity:</strong></span></div>
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
-  <input type="text" class="write-line" placeholder="">
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
+  <div class="write-row"><input type="text" class="write-name" placeholder="Account name"><input type="text" class="write-amt" placeholder="$"></div>
   <div class="bs-line total"><span class="label">Total shareholders' equity</span><input type="text" class="fill" id="p2_TE" placeholder="$"></div>
 
   <div class="bs-line grandtotal"><span class="label">Total liabilities and shareholders' equity</span><input type="text" class="fill" id="p2_TLE" placeholder="$"></div>
@@ -322,7 +325,7 @@ function generateFromDigits(digits){
   // Clear any answers/feedback from a previously-shown version (e.g., the initial random
   // preview, or a different ID) so students never see stale answers next to new numbers.
   // The Name / Student ID / Section fields in the cover box are intentionally left untouched.
-  document.querySelectorAll('input.fill, input.write-line').forEach(input => {
+  document.querySelectorAll('input.fill, input.write-name, input.write-amt').forEach(input => {
     if (input.closest('.idbox')) return;
     input.value = '';
     input.classList.remove('selfcheck-match','selfcheck-mismatch');
